@@ -14,4 +14,4 @@ RUN composer install \
     && chmod -R 777 storage bootstrap/cache \
     && php artisan config:cache
 
-CMD sh -c "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT"
+CMD sh -c "php artisan migrate --force || true; php artisan serve --host=0.0.0.0 --port=$PORT"
