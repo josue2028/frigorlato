@@ -20,4 +20,4 @@ RUN composer install --no-dev --optimize-autoloader \
     && chmod -R 777 storage bootstrap/cache
 
 # 5. Pasamos la caché al CMD para que lea las variables de Render al arrancar
-CMD sh -c "php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan migrate --force || true && php artisan serve --host=0.0.0.0 --port=$PORT"
+CMD sh -c "php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan migrate --force || true && php artisan db:seed --force || true && php artisan serve --host=0.0.0.0 --port=$PORT"
