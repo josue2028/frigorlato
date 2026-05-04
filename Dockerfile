@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 RUN composer install \
-    && php artisan migrate --force \
+    && chmod -R 777 storage bootstrap/cache \
     && php artisan config:cache
 
-CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT
+CMD sh -c "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT"
