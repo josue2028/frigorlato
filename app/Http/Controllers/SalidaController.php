@@ -2,42 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Lote;
-use App\Models\Salida;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreSalidaRequest;
+use App\Services\FIFOService;
+use App\Services\InventarioService;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class SalidaController extends Controller
 {
-    public function index()
+    public function __construct(
+        protected FIFOService $fifoService,
+        protected InventarioService $inventarioService
+    ) {}
+
+    public function create(): View
     {
-        $lotesDisponibles = Lote::where('saldo_actual_libras', '>', 0)->get();
-        $salidas = Salida::with('lote')->orderBy('created_at', 'desc')->get();
-        return view('salidas.index', compact('lotesDisponibles', 'salidas'));
+        return view('despachador.salidas.create', [
+            'stockTotal' => $this->inventarioService->stockTotal(),
+        ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreSalidaRequest $request): RedirectResponse
     {
-        $request->validate([
-            'lote_id' => 'required|exists:lotes,id',
-            'cantidad' => 'required|numeric|min:0.01',
-            'fecha_salida' => 'required|date',
-        ]);
+        $resultado = $this->fifoService->procesarSalida((float) $request->validated('cantidad_libras'));
 
-        $lote = Lote::findOrFail($request->lote_id);
+        $detalle = collect($resultado['lotes_afectados'])
+            ->map(fn (array $lote) => "{$lote['numero_lote']}: {$lote['cantidad_descontada']} lb")
+            ->implode(' | ');
 
-        if ($request->cantidad > $lote->saldo_actual_libras) {
-            return back()->withErrors(['cantidad' => 'No hay suficiente saldo en este lote.']);
-        }
-
-        Salida::create([
-            'lote_id' => $lote->id,
-            'cantidad_salida_libras' => $request->cantidad,
-            'fecha_salida' => $request->fecha_salida,
-            'cliente' => $request->cliente ?? 'Consumo Interno',
-        ]);
-
-        $lote->decrement('saldo_actual_libras', $request->cantidad);
-
-        return redirect()->route('salidas.index')->with('success', 'Salida registrada correctamente.');
+        return redirect()
+            ->route('salidas.create')
+            ->with('success', "Salida {$resultado['numero_salida']} registrada correctamente. Lotes usados: {$detalle}");
     }
 }

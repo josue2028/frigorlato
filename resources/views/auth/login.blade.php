@@ -1,25 +1,51 @@
 <x-guest-layout>
-    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-[#0d1117]">
-        <div class="w-full sm:max-w-md mt-6 px-6 py-8 bg-[#161b22] border border-[#2a3241] shadow-2xl overflow-hidden sm:rounded-2xl">
-            <h2 class="text-[#00c9a7] font-syne font-bold text-2xl text-center mb-8 uppercase tracking-tighter">Frigorlato Login</h2>
-            
-            <form method="POST" action="{{ route('login') }}">
+    <div class="card overflow-hidden">
+        <div class="bg-brand-900 px-8 py-8 text-bone">
+            <p class="text-sm uppercase tracking-[0.3em] text-brand-100">Sistema web de trazabilidad</p>
+            <h1 class="mt-3 font-display text-3xl font-semibold text-bone">Frigorlato</h1>
+            <p class="mt-3 text-sm text-brand-100">
+                Accede con tu correo y contrasena. El usuario se utiliza para registrar quien realiza cada cambio en el sistema.
+            </p>
+        </div>
+
+        <div class="space-y-6 px-8 py-8">
+            <div class="rounded-2xl border border-brand-100 bg-brand-50 px-4 py-3 text-sm text-brand-900">
+                <p class="font-semibold">Credenciales de prueba</p>
+                <p class="mt-1">Admin 1: admin1@frigorlato.com / password123</p>
+                <p>Admin 2: admin2@frigorlato.com / password123</p>
+                <p>Admin 3: admin3@frigorlato.com / password123</p>
+            </div>
+
+            <x-auth-session-status class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700" :status="session('status')" />
+
+            <form method="POST" action="{{ route('login') }}" class="space-y-5">
                 @csrf
+
                 <div>
-                    <label class="block font-bold text-xs text-gray-400 uppercase">Correo Electrónico</label>
-                    <input type="email" name="email" class="block mt-1 w-full bg-[#1c2330] border-[#2a3241] text-white rounded-lg shadow-sm focus:ring-[#00c9a7]" required autofocus />
+                    <label for="email" class="form-label">Correo electronico</label>
+                    <input id="email" class="form-input" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username">
                 </div>
 
-                <div class="mt-4">
-                    <label class="block font-bold text-xs text-gray-400 uppercase">Contraseña</label>
-                    <input type="password" name="password" class="block mt-1 w-full bg-[#1c2330] border-[#2a3241] text-white rounded-lg shadow-sm focus:ring-[#00c9a7]" required />
+                <div>
+                    <div class="flex items-center justify-between">
+                        <label for="password" class="form-label">Contrasena</label>
+                        @if (Route::has('password.request'))
+                            <a class="text-sm font-medium text-brand-800 hover:text-brand-900" href="{{ route('password.request') }}">
+                                Olvide mi contrasena
+                            </a>
+                        @endif
+                    </div>
+                    <input id="password" class="form-input" type="password" name="password" required autocomplete="current-password">
                 </div>
 
-                <div class="mt-8">
-                    <button type="submit" class="w-full bg-[#00c9a7] text-[#0d1117] font-bold py-3 rounded-xl hover:bg-[#00a388] transition shadow-lg">
-                        INGRESAR AL SISTEMA
-                    </button>
-                </div>
+                <label class="flex items-center gap-3 text-sm text-slate-600">
+                    <input type="checkbox" name="remember" class="rounded border-brand-300 text-brand-800 focus:ring-brand-700">
+                    <span>Recordar sesion</span>
+                </label>
+
+                <button type="submit" class="btn-primary w-full">
+                    Ingresar al sistema
+                </button>
             </form>
         </div>
     </div>

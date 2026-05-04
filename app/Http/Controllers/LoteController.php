@@ -2,50 +2,103 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreLoteRequest;
+use App\Http\Requests\UpdateLoteRequest;
 use App\Models\Lote;
-use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class LoteController extends Controller
 {
-    public function dashboard()
+    public function index(): View
     {
-        $totalLotes = Lote::where('saldo_actual_libras', '>', 0)->count();
-        $librasDisponibles = Lote::sum('saldo_actual_libras');
-        $proximosAVencer = Lote::where('saldo_actual_libras', '>', 0)
-            ->where('fecha_vencimiento', '<=', Carbon::now()->addDays(15))
-            ->orderBy('fecha_vencimiento', 'asc')
-            ->get();
-
-        return view('dashboard', compact('totalLotes', 'librasDisponibles', 'proximosAVencer'));
-    }
-
-    public function index()
-    {
-        $lotes = Lote::orderBy('fecha_vencimiento', 'asc')->get();
-        return view('lotes.index', compact('lotes'));
-    }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'numero_lote' => 'required|unique:lotes',
-            'cantidad' => 'required|numeric|min:0.01',
-            'fecha_entrada' => 'required|date',
+        return view('admin.lotes.index', [
+            'lotes' => Lote::query()
+                ->withCount('movimientos')
+                ->latest()
+                ->paginate(10),
         ]);
+    }
 
-        // HU-04: Lógica automática de 45 días
-        $fechaEntrada = Carbon::parse($request->fecha_entrada);
-        $fechaVencimiento = $fechaEntrada->copy()->addDays(45);
+    public function create(): View
+    {
+        return view('admin.lotes.create', [
+            'fechaEntradaSugerida' => now()->toDateString(),
+            'fechaVencimientoSugerida' => now()->addDays(45)->toDateString(),
+        ]);
+    }
+
+    public function store(StoreLoteRequest $request): RedirectResponse
+    {
+        $data = $request->validated();
+        $fechaVencimiento = Carbon::parse($data['fecha_entrada'])->addDays(45)->toDateString();
 
         Lote::create([
-            'numero_lote' => $request->numero_lote,
-            'cantidad_entrada_libras' => $request->cantidad,
-            'saldo_actual_libras' => $request->cantidad,
-            'fecha_entrada' => $request->fecha_entrada,
+            'numero_lote' => $data['numero_lote'],
+            'cantidad_entrada' => $data['cantidad_entrada'],
+            'fecha_entrada' => $data['fecha_entrada'],
             'fecha_vencimiento' => $fechaVencimiento,
+            'saldo_disponible' => $data['cantidad_entrada'],
+            'user_id' => $request->user()->id,
         ]);
 
-        return redirect()->route('lotes.index')->with('success', 'Lote registrado con éxito');
+        return redirect()
+            ->route('admin.lotes.index')
+            ->with('success', 'Lote creado correctamente. Fecha de vencimiento calculada a 45 dias.');
+    }
+
+    public function edit(Lote $lote): View|RedirectResponse
+    {
+        if ($lote->movimientos()->exists()) {
+            return redirect()
+                ->route('admin.lotes.index')
+                ->with('error', 'No puedes editar un lote que ya tiene movimientos asociados.');
+        }
+
+        return view('admin.lotes.edit', [
+            'lote' => $lote,
+            'fechaVencimientoCalculada' => Carbon::parse($lote->fecha_entrada)->addDays(45)->toDateString(),
+        ]);
+    }
+
+    public function update(UpdateLoteRequest $request, Lote $lote): RedirectResponse
+    {
+        if ($lote->movimientos()->exists()) {
+            return redirect()
+                ->route('admin.lotes.index')
+                ->with('error', 'No puedes actualizar un lote que ya tiene movimientos asociados.');
+        }
+
+        $data = $request->validated();
+        $fechaVencimiento = Carbon::parse($data['fecha_entrada'])->addDays(45)->toDateString();
+
+        $lote->update([
+            'numero_lote' => $data['numero_lote'],
+            'cantidad_entrada' => $data['cantidad_entrada'],
+            'fecha_entrada' => $data['fecha_entrada'],
+            'fecha_vencimiento' => $fechaVencimiento,
+            'saldo_disponible' => $data['cantidad_entrada'],
+            'user_id' => $request->user()->id,
+        ]);
+
+        return redirect()
+            ->route('admin.lotes.index')
+            ->with('success', 'Lote actualizado correctamente.');
+    }
+
+    public function destroy(Lote $lote): RedirectResponse
+    {
+        if ($lote->movimientos()->exists()) {
+            return redirect()
+                ->route('admin.lotes.index')
+                ->with('error', 'No puedes eliminar un lote que ya tiene movimientos asociados.');
+        }
+
+        $lote->delete();
+
+        return redirect()
+            ->route('admin.lotes.index')
+            ->with('success', 'Lote eliminado correctamente.');
     }
 }

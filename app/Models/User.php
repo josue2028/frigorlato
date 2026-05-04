@@ -3,17 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
     /**
-     * Los atributos que se pueden asignar masivamente.
-     * Se agregó 'role' para la HU-02.
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
      */
     protected $fillable = [
         'name',
@@ -23,7 +24,9 @@ class User extends Authenticatable
     ];
 
     /**
-     * Atributos ocultos para serialización.
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
@@ -31,7 +34,9 @@ class User extends Authenticatable
     ];
 
     /**
-     * Mapeo de tipos de datos.
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
      */
     protected function casts(): array
     {
@@ -41,12 +46,18 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Lógica de Roles (HU-02)
-     * Retorna true si el usuario es Administrador (Role 1)
-     */
+    public function lotes(): HasMany
+    {
+        return $this->hasMany(Lote::class);
+    }
+
+    public function movimientos(): HasMany
+    {
+        return $this->hasMany(Movimiento::class);
+    }
+
     public function isAdmin(): bool
     {
-        return $this->role === 1;
+        return $this->role === 'admin';
     }
 }
