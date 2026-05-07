@@ -26,6 +26,7 @@
                                 <th class="px-6 py-4">Entrada</th>
                                 <th class="px-6 py-4">Vencimiento</th>
                                 <th class="px-6 py-4">Saldo</th>
+                                <th class="px-6 py-4">Editado por</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-brand-100 bg-white">
@@ -38,10 +39,11 @@
                                     <td class="px-6 py-4 text-slate-600">{{ $lote->fecha_entrada->format('Y-m-d') }}</td>
                                     <td class="px-6 py-4 text-slate-600">{{ $lote->fecha_vencimiento->format('Y-m-d') }}</td>
                                     <td class="px-6 py-4 font-semibold text-brand-900">{{ number_format($lote->saldo_disponible, 2) }} lb</td>
+                                    <td class="px-6 py-4 text-slate-600">{{ $lote->user?->editor_label ?? 'Sin registro' }}</td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="px-6 py-6 text-center text-slate-500">No hay lotes disponibles.</td>
+                                    <td colspan="5" class="px-6 py-6 text-center text-slate-500">No hay lotes disponibles.</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -62,6 +64,7 @@
                                 <th class="px-6 py-4">Lote</th>
                                 <th class="px-6 py-4">Libras</th>
                                 <th class="px-6 py-4">Saldo posterior</th>
+                                <th class="px-6 py-4">Editado por</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-brand-100 bg-white">
@@ -72,10 +75,11 @@
                                     <td class="px-6 py-4 font-medium text-slate-800">{{ $movimiento->lote?->numero_lote }}</td>
                                     <td class="px-6 py-4">{{ number_format($movimiento->cantidad_libras, 2) }} lb</td>
                                     <td class="px-6 py-4">{{ number_format($movimiento->saldo_posterior, 2) }} lb</td>
+                                    <td class="px-6 py-4 text-slate-600">{{ $movimiento->user?->editor_label ?? 'Sistema' }}</td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="px-6 py-6 text-center text-slate-500">Aun no hay movimientos registrados.</td>
+                                    <td colspan="6" class="px-6 py-6 text-center text-slate-500">Aun no hay movimientos registrados.</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -93,6 +97,7 @@
                         <p class="mt-1 text-sm text-slate-600">Entrada: {{ $lote->fecha_entrada->format('Y-m-d') }}</p>
                         <p class="text-sm text-slate-600">Vence: {{ $lote->fecha_vencimiento->format('Y-m-d') }}</p>
                         <p class="text-sm text-slate-600">Saldo: {{ number_format($lote->saldo_disponible, 2) }} lb</p>
+                        <p class="text-sm text-slate-600">Editado por: {{ $lote->user?->editor_label ?? 'Sin registro' }}</p>
                     </div>
                 @empty
                     <p class="text-sm text-slate-600">No hay lotes por vencer en los proximos 7 dias.</p>

@@ -22,6 +22,7 @@
                 <th>Fecha vencimiento</th>
                 <th>Entrada</th>
                 <th>Saldo actual</th>
+                <th>Editado por</th>
             </tr>
         </thead>
         <tbody>
@@ -32,6 +33,7 @@
                 <td>{{ $item->fecha_vencimiento->format('Y-m-d') }}</td>
                 <td>{{ number_format($item->cantidad_entrada, 2) }} lb</td>
                 <td>{{ number_format($item->saldo_disponible, 2) }} lb</td>
+                <td>{{ $item->user?->editor_label ?? 'Sin registro' }}</td>
             </tr>
             @endforeach
         </tbody>

@@ -54,6 +54,7 @@
                         <th class="px-6 py-4">Archivo</th>
                         <th class="px-6 py-4">Lote asociado</th>
                         <th class="px-6 py-4">Cargado</th>
+                        <th class="px-6 py-4">Editado por</th>
                         <th class="px-6 py-4">Acciones</th>
                     </tr>
                 </thead>
@@ -63,6 +64,7 @@
                             <td class="px-6 py-4 font-medium text-slate-800">{{ $contrato->nombre_archivo }}</td>
                             <td class="px-6 py-4 text-slate-600">{{ $contrato->lote?->numero_lote ?? 'Sin lote' }}</td>
                             <td class="px-6 py-4 text-slate-600">{{ $contrato->created_at?->format('Y-m-d H:i') }}</td>
+                            <td class="px-6 py-4 text-slate-600">{{ $contrato->user?->editor_label ?? 'Sin registro' }}</td>
                             <td class="px-6 py-4">
                                 <div class="flex flex-wrap gap-2">
                                     <a href="{{ route('admin.contratos.download', $contrato) }}" class="btn-secondary">Descargar</a>
@@ -76,7 +78,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-6 py-8 text-center text-slate-500">No hay contratos registrados con los filtros aplicados.</td>
+                            <td colspan="5" class="px-6 py-8 text-center text-slate-500">No hay contratos registrados con los filtros aplicados.</td>
                         </tr>
                     @endforelse
                 </tbody>

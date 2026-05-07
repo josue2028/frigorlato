@@ -24,7 +24,7 @@
                 <th>Libras</th>
                 <th>Saldo anterior</th>
                 <th>Saldo posterior</th>
-                <th>Usuario</th>
+                <th>Editado por</th>
             </tr>
         </thead>
         <tbody>
@@ -37,7 +37,7 @@
                 <td>{{ number_format($movimiento->cantidad_libras, 2) }} lb</td>
                 <td>{{ number_format($movimiento->saldo_anterior, 2) }} lb</td>
                 <td>{{ number_format($movimiento->saldo_posterior, 2) }} lb</td>
-                <td>{{ $movimiento->user?->name ?? 'Sistema' }}</td>
+                <td>{{ $movimiento->user?->editor_label ?? 'Sistema' }}</td>
             </tr>
             @endforeach
         </tbody>

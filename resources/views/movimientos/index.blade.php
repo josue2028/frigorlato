@@ -60,7 +60,7 @@
                         <th class="px-6 py-4">Lote</th>
                         <th class="px-6 py-4">Saldo anterior</th>
                         <th class="px-6 py-4">Saldo restante</th>
-                        <th class="px-6 py-4">Registrado por</th>
+                        <th class="px-6 py-4">Editado por</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-brand-100 bg-white">
@@ -73,7 +73,7 @@
                             <td class="px-6 py-4">{{ $movimiento->lote?->numero_lote }}</td>
                             <td class="px-6 py-4">{{ number_format($movimiento->saldo_anterior, 2) }} lb</td>
                             <td class="px-6 py-4">{{ number_format($movimiento->saldo_posterior, 2) }} lb</td>
-                            <td class="px-6 py-4 text-slate-600">{{ $movimiento->user?->name ?? 'Sistema' }}</td>
+                            <td class="px-6 py-4 text-slate-600">{{ $movimiento->user?->editor_label ?? 'Sistema' }}</td>
                         </tr>
                     @empty
                         <tr>

@@ -47,6 +47,7 @@
                         <th class="px-6 py-4">Fecha vencimiento</th>
                         <th class="px-6 py-4">Cantidad entrada</th>
                         <th class="px-6 py-4">Saldo disponible</th>
+                        <th class="px-6 py-4">Editado por</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-brand-100 bg-white">
@@ -60,10 +61,11 @@
                             <td class="px-6 py-4 text-slate-600">{{ $lote->fecha_vencimiento->format('Y-m-d') }}</td>
                             <td class="px-6 py-4">{{ number_format($lote->cantidad_entrada, 2) }} lb</td>
                             <td class="px-6 py-4 font-semibold text-brand-900">{{ number_format($lote->saldo_disponible, 2) }} lb</td>
+                            <td class="px-6 py-4 text-slate-600">{{ $lote->user?->editor_label ?? 'Sin registro' }}</td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-8 text-center text-slate-500">No hay lotes con saldo disponible.</td>
+                            <td colspan="6" class="px-6 py-8 text-center text-slate-500">No hay lotes con saldo disponible.</td>
                         </tr>
                     @endforelse
                 </tbody>

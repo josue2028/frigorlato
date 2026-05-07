@@ -24,12 +24,21 @@ class DashboardController extends Controller
         return view('admin.dashboard', [
             'stockTotal' => $this->inventarioService->stockTotal(),
             'lotesActivos' => Lote::query()->where('saldo_disponible', '>', 0)->count(),
+            'salidasRegistradas' => Movimiento::query()->count(),
+            'lotesActivosRecientes' => Lote::query()
+                ->with('user')
+                ->where('saldo_disponible', '>', 0)
+                ->orderBy('fecha_entrada')
+                ->orderBy('id')
+                ->take(8)
+                ->get(),
             'proximoVencimiento' => Lote::query()
+                ->with('user')
                 ->where('saldo_disponible', '>', 0)
                 ->orderBy('fecha_vencimiento')
                 ->first(),
             'movimientosRecientes' => Movimiento::query()
-                ->with('lote')
+                ->with(['lote', 'user'])
                 ->latest('created_at')
                 ->take(5)
                 ->get(),
@@ -41,19 +50,21 @@ class DashboardController extends Controller
         return view('despachador.dashboard', [
             'stockTotal' => $this->inventarioService->stockTotal(),
             'lotesDisponibles' => Lote::query()
+                ->with('user')
                 ->where('saldo_disponible', '>', 0)
                 ->orderBy('fecha_entrada')
                 ->orderBy('id')
                 ->take(8)
                 ->get(),
             'lotesProximosAVencer' => Lote::query()
+                ->with('user')
                 ->where('saldo_disponible', '>', 0)
                 ->whereDate('fecha_vencimiento', '<=', now()->addDays(7)->toDateString())
                 ->orderBy('fecha_vencimiento')
                 ->take(5)
                 ->get(),
             'movimientosRecientes' => Movimiento::query()
-                ->with('lote')
+                ->with(['lote', 'user'])
                 ->latest('created_at')
                 ->take(5)
                 ->get(),

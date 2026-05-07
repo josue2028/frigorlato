@@ -40,6 +40,7 @@ class ContratoController extends Controller
             'lote_id' => $request->validated('lote_id'),
             'nombre_archivo' => $nombreOriginal,
             'ruta_archivo' => $ruta,
+            'user_id' => $request->user()->id,
             'created_at' => now(),
         ]);
 
@@ -68,7 +69,7 @@ class ContratoController extends Controller
     protected function filteredContracts(Request $request): LengthAwarePaginator
     {
         return Contrato::query()
-            ->with('lote')
+            ->with(['lote', 'user'])
             ->when($request->filled('lote_id'), function ($query) use ($request) {
                 $query->where('lote_id', $request->integer('lote_id'));
             })

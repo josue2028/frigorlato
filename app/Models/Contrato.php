@@ -15,6 +15,7 @@ class Contrato extends Model
         'lote_id',
         'nombre_archivo',
         'ruta_archivo',
+        'user_id',
         'created_at',
     ];
 
@@ -28,5 +29,10 @@ class Contrato extends Model
     public function lote(): BelongsTo
     {
         return $this->belongsTo(Lote::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

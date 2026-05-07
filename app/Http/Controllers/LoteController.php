@@ -15,6 +15,7 @@ class LoteController extends Controller
     {
         return view('admin.lotes.index', [
             'lotes' => Lote::query()
+                ->with('user')
                 ->withCount('movimientos')
                 ->latest()
                 ->paginate(10),

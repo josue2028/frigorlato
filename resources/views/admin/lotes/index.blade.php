@@ -20,6 +20,7 @@
                         <th class="px-6 py-4">Cantidad</th>
                         <th class="px-6 py-4">Saldo</th>
                         <th class="px-6 py-4">Movimientos</th>
+                        <th class="px-6 py-4">Editado por</th>
                         <th class="px-6 py-4 text-right">Acciones</th>
                     </tr>
                 </thead>
@@ -32,6 +33,7 @@
                             <td class="px-6 py-4">{{ number_format($lote->cantidad_entrada, 2) }} lb</td>
                             <td class="px-6 py-4">{{ number_format($lote->saldo_disponible, 2) }} lb</td>
                             <td class="px-6 py-4">{{ $lote->movimientos_count }}</td>
+                            <td class="px-6 py-4 text-slate-600">{{ $lote->user?->editor_label ?? 'Sin registro' }}</td>
                             <td class="px-6 py-4">
                                 <div class="flex justify-end gap-3">
                                     <a href="{{ route('admin.lotes.edit', $lote) }}" class="btn-secondary">Editar</a>
@@ -47,7 +49,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-8 text-center text-slate-500">No hay lotes registrados.</td>
+                            <td colspan="8" class="px-6 py-8 text-center text-slate-500">No hay lotes registrados.</td>
                         </tr>
                     @endforelse
                 </tbody>

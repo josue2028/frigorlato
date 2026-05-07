@@ -56,6 +56,18 @@ class User extends Authenticatable
         return $this->hasMany(Movimiento::class);
     }
 
+    public function contratos(): HasMany
+    {
+        return $this->hasMany(Contrato::class);
+    }
+
+    public function getEditorLabelAttribute(): string
+    {
+        $name = trim((string) $this->name);
+
+        return $name !== '' ? $name : 'Usuario '.$this->id;
+    }
+
     public function isAdmin(): bool
     {
         return $this->role === 'admin';

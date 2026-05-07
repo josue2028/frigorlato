@@ -66,6 +66,7 @@ class InventarioController extends Controller
     protected function filteredQuery(Request $request): Builder
     {
         return Lote::query()
+            ->with('user')
             ->where('saldo_disponible', '>', 0)
             ->when($request->filled('numero_lote'), function (Builder $query) use ($request) {
                 $query->where('numero_lote', 'like', '%'.$request->string('numero_lote')->trim().'%');
