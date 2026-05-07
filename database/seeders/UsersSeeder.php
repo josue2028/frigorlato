@@ -44,5 +44,14 @@ class UsersSeeder extends Seeder
                 'role' => 'admin',
             ]
         );
+
+        User::updateOrCreate(
+            ['email' => 'josuecaicedo949@gmail.com'],
+            [
+                'name' => 'Josue Caicedo',
+                'password' => null,
+                'role' => 'admin',
+            ]
+        );
     }
 }
