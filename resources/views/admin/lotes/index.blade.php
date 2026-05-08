@@ -1,18 +1,26 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div>
-                <h1 class="section-title">Gestion de lotes</h1>
-                <p class="mt-1 text-sm text-slate-600">Crea, actualiza y elimina lotes sin movimientos asociados.</p>
+                <p class="section-kicker">Lotes</p>
+                <h1 class="section-title mt-3">Gestion de lotes</h1>
+                <p class="mt-3 max-w-2xl text-sm leading-7 text-slate-600">Crea, actualiza y elimina lotes sin movimientos asociados, con una tabla mas limpia y paginada.</p>
             </div>
             <a href="{{ route('admin.lotes.create') }}" class="btn-primary">Nuevo lote</a>
         </div>
     </x-slot>
 
     <section class="table-shell">
+        <div class="flex items-center justify-between border-b border-brand-100/70 px-6 py-5">
+            <div>
+                <p class="section-kicker">Listado</p>
+                <h2 class="mt-2 text-xl font-semibold text-brand-900">Lotes registrados</h2>
+            </div>
+            <span class="pill-tab">{{ $lotes->total() }} registros</span>
+        </div>
         <div class="overflow-x-auto">
             <table class="table-base">
-                <thead class="bg-brand-50 text-left text-xs uppercase tracking-[0.2em] text-brand-900">
+                <thead class="bg-brand-50/80 text-left text-xs uppercase tracking-[0.24em] text-brand-800">
                     <tr>
                         <th class="px-6 py-4">Numero</th>
                         <th class="px-6 py-4">Entrada</th>
@@ -24,9 +32,9 @@
                         <th class="px-6 py-4 text-right">Acciones</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-brand-100 bg-white">
+                <tbody class="divide-y divide-brand-100/60 bg-white/90">
                     @forelse ($lotes as $lote)
-                        <tr>
+                        <tr class="hover:bg-brand-50/45">
                             <td class="px-6 py-4 font-semibold text-slate-800">{{ $lote->numero_lote }}</td>
                             <td class="px-6 py-4 text-slate-600">{{ $lote->fecha_entrada->format('Y-m-d') }}</td>
                             <td class="px-6 py-4 text-slate-600">{{ $lote->fecha_vencimiento->format('Y-m-d') }}</td>
@@ -35,21 +43,19 @@
                             <td class="px-6 py-4">{{ $lote->movimientos_count }}</td>
                             <td class="px-6 py-4 text-slate-600">{{ $lote->user?->editor_label ?? 'Sin registro' }}</td>
                             <td class="px-6 py-4">
-                                <div class="flex justify-end gap-3">
-                                    <a href="{{ route('admin.lotes.edit', $lote) }}" class="btn-secondary">Editar</a>
+                                <div class="flex justify-end gap-2">
+                                    <a href="{{ route('admin.lotes.edit', $lote) }}" class="table-action">Editar</a>
                                     <form method="POST" action="{{ route('admin.lotes.destroy', $lote) }}" onsubmit="return confirm('Confirma la eliminacion de este lote.');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="inline-flex items-center justify-center rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-sm font-semibold text-red-700 transition hover:bg-red-100">
-                                            Eliminar
-                                        </button>
+                                        <button type="submit" class="table-action border-red-200 text-red-700 hover:bg-red-50">Eliminar</button>
                                     </form>
                                 </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="px-6 py-8 text-center text-slate-500">No hay lotes registrados.</td>
+                            <td colspan="8" class="px-6 py-10 text-center text-slate-500">No hay lotes registrados.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -57,7 +63,5 @@
         </div>
     </section>
 
-    <div class="mt-6">
-        {{ $lotes->links() }}
-    </div>
+    {{ $lotes->onEachSide(1)->links() }}
 </x-app-layout>

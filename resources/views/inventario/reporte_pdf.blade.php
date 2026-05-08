@@ -4,11 +4,11 @@
     <title>Reporte de inventario</title>
     <meta charset="utf-8">
     <style>
-        body { font-family: sans-serif; }
+        body { font-family: DejaVu Sans, sans-serif; color: #4A4A4A; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #00c9a7; color: white; }
-        h2 { color: #333; }
+        th, td { border: 1px solid #e2aeb0; padding: 8px; text-align: left; }
+        th { background-color: #900C0F; color: #FDF8F0; }
+        h2 { color: #900C0F; }
     </style>
 </head>
 <body>

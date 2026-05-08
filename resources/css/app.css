@@ -4,7 +4,7 @@
 
 @layer base {
     body {
-        @apply bg-ivory text-slate-800 font-sans;
+        @apply bg-ivory font-sans text-charcoal;
     }
 
     h1,
@@ -23,7 +23,7 @@
     @keyframes rise-fade {
         from {
             opacity: 0;
-            transform: translateY(16px);
+            transform: translateY(18px);
         }
 
         to {
@@ -38,68 +38,98 @@
         }
 
         50% {
-            transform: translate3d(0, -8px, 0);
+            transform: translate3d(0, -10px, 0);
+        }
+    }
+
+    @keyframes soft-pulse {
+        0%, 100% {
+            opacity: 0.7;
+            transform: scale(1);
+        }
+
+        50% {
+            opacity: 1;
+            transform: scale(1.03);
         }
     }
 }
 
 @layer components {
     .card {
-        @apply rounded-2xl bg-white shadow-soft ring-1 ring-brand-100 transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(120,53,15,0.12)];
+        @apply rounded-[1.5rem] border border-brand-100 bg-bone shadow-panel transition duration-300;
     }
 
     .section-title {
-        @apply text-2xl font-semibold text-brand-900;
+        @apply text-3xl font-semibold tracking-[-0.02em] text-brand-900 sm:text-[2.1rem];
+    }
+
+    .section-kicker {
+        @apply text-xs font-semibold uppercase tracking-[0.34em] text-brand-500;
     }
 
     .form-label {
-        @apply mb-1 block text-sm font-medium text-slate-700;
+        @apply mb-2 block text-sm font-semibold text-charcoal;
     }
 
     .form-input {
-        @apply block w-full rounded-xl border-brand-200 bg-white px-4 py-3 text-sm text-slate-800 shadow-sm focus:border-brand-800 focus:ring-brand-800;
+        @apply block w-full rounded-2xl border border-brand-100 bg-bone px-4 py-3 text-sm text-charcoal shadow-sm transition placeholder:text-slate-400 focus:border-brand-300 focus:ring-brand-300;
     }
 
     .btn-primary {
-        @apply inline-flex items-center justify-center rounded-xl bg-brand-800 px-4 py-2.5 text-sm font-semibold text-bone transition duration-300 hover:-translate-y-0.5 hover:bg-brand-900 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2;
+        @apply inline-flex items-center justify-center rounded-2xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white shadow-soft transition duration-300 hover:-translate-y-0.5 hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-300 focus:ring-offset-2;
     }
 
     .btn-secondary {
-        @apply inline-flex items-center justify-center rounded-xl border border-brand-200 bg-white px-4 py-2.5 text-sm font-semibold text-brand-900 transition duration-300 hover:-translate-y-0.5 hover:bg-brand-50 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2;
+        @apply inline-flex items-center justify-center rounded-2xl border border-brand-100 bg-bone px-5 py-3 text-sm font-semibold text-brand-700 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:bg-brand-50 focus:outline-none focus:ring-2 focus:ring-brand-300 focus:ring-offset-2;
+    }
+
+    .btn-ghost {
+        @apply inline-flex items-center justify-center rounded-2xl px-5 py-3 text-sm font-semibold text-brand-700 transition hover:bg-brand-50;
     }
 
     .table-shell {
-        @apply overflow-hidden rounded-2xl bg-white shadow-soft ring-1 ring-brand-100 transition duration-300;
+        @apply overflow-hidden rounded-[1.5rem] border border-brand-100 bg-bone shadow-panel transition duration-300;
     }
 
     .table-base {
         @apply min-w-full divide-y divide-brand-100 text-sm;
     }
 
-    .app-stage::before {
-        content: '';
-        position: fixed;
-        inset: auto auto 8% -8%;
-        width: 22rem;
-        height: 22rem;
-        border-radius: 9999px;
-        background: radial-gradient(circle, rgba(180, 83, 9, 0.12) 0%, rgba(180, 83, 9, 0) 70%);
-        filter: blur(10px);
-        pointer-events: none;
-        animation: ambient-float 10s ease-in-out infinite;
+    .metric-card {
+        @apply card p-6;
     }
 
-    .app-stage::after {
-        content: '';
-        position: fixed;
-        inset: 10% -6% auto auto;
-        width: 18rem;
-        height: 18rem;
-        border-radius: 9999px;
-        background: radial-gradient(circle, rgba(185, 28, 28, 0.1) 0%, rgba(185, 28, 28, 0) 72%);
-        filter: blur(12px);
-        pointer-events: none;
-        animation: ambient-float 12s ease-in-out infinite reverse;
+    .sidebar-shell {
+        @apply fixed inset-y-0 left-0 z-40 w-[17rem] flex-col border-r border-brand-700 bg-brand-600 px-5 py-6;
+    }
+
+    .sidebar-link {
+        @apply flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-brand-100 transition duration-300 hover:bg-brand-700 hover:text-white;
+    }
+
+    .sidebar-link-active {
+        @apply bg-bone text-brand-600 shadow-sm;
+    }
+
+    .pill-tab {
+        @apply inline-flex items-center rounded-full border border-brand-100 bg-bone px-4 py-2 text-sm font-semibold text-brand-700;
+    }
+
+    .table-action {
+        @apply inline-flex items-center justify-center rounded-xl border border-brand-100 bg-bone px-3 py-2 text-sm font-semibold text-brand-700 transition hover:bg-brand-50;
+    }
+
+    .topbar-shell {
+        @apply fixed top-0 right-0 z-30 border-b border-brand-100 bg-bone;
+    }
+
+    .metric-icon {
+        @apply inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-600 shadow-sm;
+    }
+
+    .user-badge {
+        @apply inline-flex items-center gap-3 rounded-2xl border border-brand-100 bg-bone px-4 py-2 text-sm text-charcoal shadow-sm;
     }
 
     .page-header-shell {
@@ -116,4 +146,6 @@
     .content-shell > *:nth-child(4) { animation-delay: 0.2s; }
     .content-shell > *:nth-child(5) { animation-delay: 0.25s; }
     .content-shell > *:nth-child(6) { animation-delay: 0.3s; }
+    .content-shell > *:nth-child(7) { animation-delay: 0.35s; }
+    .content-shell > *:nth-child(8) { animation-delay: 0.4s; }
 }

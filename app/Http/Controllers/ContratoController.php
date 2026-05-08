@@ -10,7 +10,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Http\Response;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ContratoController extends Controller
@@ -56,6 +58,19 @@ class ContratoController extends Controller
         return Storage::disk('local')->download($contrato->ruta_archivo, $contrato->nombre_archivo);
     }
 
+    public function show(Contrato $contrato): Response|BinaryFileResponse|StreamedResponse
+    {
+        abort_unless(Storage::disk('local')->exists($contrato->ruta_archivo), 404);
+
+        $absolutePath = Storage::disk('local')->path($contrato->ruta_archivo);
+        $mimeType = mime_content_type($absolutePath) ?: 'application/octet-stream';
+
+        return response()->file($absolutePath, [
+            'Content-Type' => $mimeType,
+            'Content-Disposition' => 'inline; filename="'.$contrato->nombre_archivo.'"',
+        ]);
+    }
+
     public function destroy(Contrato $contrato): RedirectResponse
     {
         Storage::disk('local')->delete($contrato->ruta_archivo);
@@ -74,7 +89,7 @@ class ContratoController extends Controller
                 $query->where('lote_id', $request->integer('lote_id'));
             })
             ->latest('created_at')
-            ->paginate(10)
+            ->paginate(8)
             ->withQueryString();
     }
 }

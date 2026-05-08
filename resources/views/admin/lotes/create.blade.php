@@ -1,12 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
         <div>
-            <h1 class="section-title">Nuevo lote</h1>
-            <p class="mt-1 text-sm text-slate-600">Registra un lote nuevo y calcula automaticamente su vencimiento a 45 dias.</p>
+            <p class="section-kicker">Registro</p>
+            <h1 class="section-title mt-3">Nuevo lote</h1>
+            <p class="mt-3 max-w-2xl text-sm leading-7 text-slate-600">Registra un lote nuevo y calcula automaticamente su vencimiento a 45 dias.</p>
         </div>
     </x-slot>
 
-    <section class="card max-w-3xl p-6">
+    <section class="card max-w-4xl p-6 sm:p-8">
         <form method="POST" action="{{ route('admin.lotes.store') }}" class="grid gap-5 md:grid-cols-2">
             @csrf
 
@@ -30,7 +31,7 @@
                 <input type="text" class="form-input bg-slate-50" value="{{ old('fecha_vencimiento', $fechaVencimientoSugerida) }}" readonly>
             </div>
 
-            <div class="md:col-span-2 flex gap-3">
+            <div class="md:col-span-2 flex flex-wrap gap-3 pt-2">
                 <button type="submit" class="btn-primary">Guardar lote</button>
                 <a href="{{ route('admin.lotes.index') }}" class="btn-secondary">Cancelar</a>
             </div>
